@@ -1,12 +1,12 @@
-package com.bamcoding.toy;
+package com.bamcoding.toy.todo.entity;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import javax.persistence.*;
 
-@Data
+@Getter
 @NoArgsConstructor
 @Entity
 @Table(name="TODO_INFO")
