@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface TodoService {
 
+    String testService();
+
     List<TodoEntity> findTodo();
 
     boolean deleteTodo(TodoEntity todoEntity);

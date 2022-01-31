@@ -1,27 +1,23 @@
 package com.bamcoding.toy.todo.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@Getter
+@Data
+@ToString
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
-@Table(name="TODO_INFO")
+@Table(name = "Todo")
 public class TodoEntity {
     @Id
-    @NonNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long seq;
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    private String id;
+    private String userId;
     private String title;
-    private String content;
-    @Column(name = "creation_date")
-    private String creationDate;
-    @Column(name = "modified_date")
-    private String modifiedDate;
-    @Column(name = "user_name")
-    private String userName;
-
+    private boolean done;
 }

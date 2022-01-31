@@ -1,15 +1,21 @@
 package com.bamcoding.toy.todo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.bamcoding.toy.todo.entity.TodoEntity;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TodoDTO {
-    private Long seq;
+    private String id;
     private String title;
-    private String content;
-    private String creationDate;
-    private String modifiedDate;
-    private String userName;
+    private boolean done;
+
+    public TodoDTO(final TodoEntity entity){
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.done = entity.isDone();
+    }
 }
