@@ -12,32 +12,27 @@ class App extends React.Component {
     }
 
     componentDidMount = (item) => {
-        call("/todo/v1/list","GET",item).then((response) => {
-            this.setState({items: response.todoVOList});
+        call("/todo","GET",item).then((response) => {
+            this.setState({items: response.data});
         });
     }
 
     add = (item) => {
-        call("/todo/v1/save","POST",item).then((response) =>
+        call("/todo","POST",item).then((response) =>
             this.setState({items:response.data})
         );
     }
 
     update = (item) => {
-        call("/todo/v1/save","PUT",item).then((response) =>
+        call("/todo","PUT",item).then((response) =>
             this.setState({items:response.data})
         );
     }
 
     delete = (item) => {
-        const thisItems = this.state.items;
-        console.log("Before Update Items : ", thisItems)
-        console.log("Before Update Items : ", thisItems.length)
-        const newItems = thisItems.filter(e => e.seq !== item.seq);
-        this.setState({ items: newItems }, () => {
-            console.log("Update Items : ",this.state.items)
-            console.log("Update Items : ",this.state.items.length)
-        });
+        call("/todo","DELETE",item).then((response) =>
+            this.setState({items:response.data})
+        );
     }
 
     render() {
@@ -48,7 +43,7 @@ class App extends React.Component {
                     {this.state.items.map((item, idx) => (
                         <Todo
                             item={item}
-                            key={item.seq}
+                            key={item.id}
                             delete={this.delete}
                             update={this.update}
                         />

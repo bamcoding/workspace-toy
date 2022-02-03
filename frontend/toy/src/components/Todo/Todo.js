@@ -53,8 +53,8 @@ class Todo extends React.Component {
                             readOnly: this.state.readOnly,
                         }}
                         type="text"
-                        id={item.seq.toString()}
-                        name={item.seq.toString()}
+                        id={item.id}
+                        name={item.id}
                         value={item.title}
                         multiline={true}
                         fullWidth={true}
