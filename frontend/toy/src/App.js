@@ -1,70 +1,73 @@
 import React from 'react';
-/*import Board from './board/Board';*/
 import './App.css';
 import Todo from './components/Todo/Todo';
+import {Paper, List, Container} from "@material-ui/core";
 import AddTodo from "./components/Todo/AddTodo";
+import { call } from "./service/ApiService";
 
 class App extends React.Component {
     constructor(props){
         super(props);
-        this.state = {
-            items:[
-                {id:0, title:"Hello World 1", done: true},
-                {id:2, title:"Hello World 2", done: false},
-            ]
-        };
+        this.state = {items:[]}
+    }
+
+    componentDidMount = (item) => {
+        call("/todo/v1/list","GET",item).then((response) => {
+            this.setState({items: response.todoVOList});
+        });
     }
 
     add = (item) => {
+        call("/todo/v1/save","POST",item).then((response) =>
+            this.setState({items:response.data})
+        );
+    }
+
+    update = (item) => {
+        call("/todo/v1/save","PUT",item).then((response) =>
+            this.setState({items:response.data})
+        );
+    }
+
+    delete = (item) => {
         const thisItems = this.state.items;
-        item.id = "ID-"+thisItems.length;
-        item.done = false;
-        thisItems.push(item);
-        this.setState({items:thisItems})
-        console.log("items : ",this.state.items)
+        console.log("Before Update Items : ", thisItems)
+        console.log("Before Update Items : ", thisItems.length)
+        const newItems = thisItems.filter(e => e.seq !== item.seq);
+        this.setState({ items: newItems }, () => {
+            console.log("Update Items : ",this.state.items)
+            console.log("Update Items : ",this.state.items.length)
+        });
     }
 
     render() {
-        const todoItems = this.state.items.map((item,idx) => (
-            <Todo item={item} key={item.id} />
-        ));
+        console.log("items : ",this.state.items);
+        let todoItems = this.state.items !=null && this.state.items.length > 0 && (
+            <Paper style={{ margin: 16 }}>
+                <List>
+                    {this.state.items.map((item, idx) => (
+                        <Todo
+                            item={item}
+                            key={item.seq}
+                            delete={this.delete}
+                            update={this.update}
+                        />
+                    ))}
+                </List>
+            </Paper>
+        );
 
         return (
             <div className="App">
-                <AddTodo add={this.add} />
-                <div className="TodoList">
-                    {todoItems}
-                </div>
+                <Container maxWidth="md">
+                    <AddTodo add={this.add} />
+                    <div className="TodoList">
+                        {todoItems}
+                    </div>
+                </Container>
             </div>
         )
     }
 }
-    /*  constructor(props) {
-    super(props);
-    this.state = {
-      items : [
-        {id:1,title:"하하1",content:"내용1"},
-        {id:2,title:"하하2",content:"내용2"},
-        {id:3,title:"하하3",content:"내용3"},
-      ],
-    };
-  }
-
-  render() {
-    let appTitle = `자바스크립트에서 HTML을 함께 사용하는 문법은 JSX라고 한다.
-    빌드 시에 Babel이라는 트랜스파일러 라이브러리가 자바스크립트로 변환하여 브라우저에게 준다.`;
-    
-    let boardList = this.state.items.map((board, idx) => {
-      return <Board item={board} key={board.id}/>
-    });
-
-    return (
-      <div className="App">
-        <div>{appTitle}</div>
-        <div id="divBoard">{boardList}</div>
-      </div>
-    );
-  }
-}*/
 
 export default App;

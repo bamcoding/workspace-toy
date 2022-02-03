@@ -4,18 +4,14 @@ import com.bamcoding.toy.todo.dto.ResponseDTO;
 import com.bamcoding.toy.todo.dto.TodoDTO;
 import com.bamcoding.toy.todo.entity.TodoEntity;
 import com.bamcoding.toy.todo.service.TodoService;
-import org.modelmapper.ModelMapper;
+import io.swagger.models.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("todo")
@@ -32,67 +28,92 @@ public class TodoController {
         ResponseDTO<String> response = ResponseDTO.<String>builder().data(list).build();
         return ResponseEntity.ok().body(response);
     }
-//
-//    @RequestMapping("/list")
-//    @ResponseBody
-//    public Map<String,Object> getTodoList() {
-//        Map<String,Object> retMap = new HashMap<>();
-//        retMap.put("result","fail");
-//
-//        List<TodoEntity> todoVOList = todoService.findTodo();
-//
-//        if(todoVOList != null && todoVOList.size() > 0)
-//        {
-//            retMap.put("result","success");
-//            retMap.put("todoVOList",todoVOList);
-//        }
-//
-//        return retMap;
-//    }
-//
-//    @RequestMapping("/delete")
-//    @ResponseBody
-//    public Map<String, Object> delteTodo(TodoDTO todoDTO) {
-//        Map<String,Object> retMap = new HashMap<>();
-//        retMap.put("result","fail");
-//
-//        try {
-//            //데이터 변환
-//            ModelMapper modelMapper = new ModelMapper();
-//            TodoEntity todoEntity = new TodoEntity();
-//            modelMapper.map(todoDTO, todoEntity);
-//            System.out.println("dto : "+todoDTO.toString());
-//            System.out.println("dto : "+todoEntity.toString());
-//
-//            todoService.deleteTodo(todoEntity);
-//            retMap.put("result","success");
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return retMap;
-//    }
-//
-//    @RequestMapping("/save")
-//    @ResponseBody
-//    public Map<String,Object> saveTodo(TodoDTO todoDTO){
-//        Map<String,Object> retMap = new HashMap<>();
-//        retMap.put("result","fail");
-//
-//        try {
-//            //데이터 변환
-//            ModelMapper modelMapper = new ModelMapper();
-//            TodoEntity todoEntity = new TodoEntity();
-//            modelMapper.map(todoDTO,todoEntity);
-//
-//            todoService.saveTodo(todoEntity);
-//            retMap.put("result","success");
-//        }
-//        catch(Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        return retMap;
-//    }
+
+    @PostMapping
+    public ResponseEntity<?> createTodo(@RequestBody TodoDTO dto) {
+        try{
+            String temporaryUserId = "temporary-user";
+
+            TodoEntity entity = TodoDTO.toEntity(dto);
+
+            entity.setId(null);
+
+            entity.setUserId(temporaryUserId);
+
+            List<TodoEntity> entities = service.create(entity);
+
+            List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(response);
+
+        }
+    }
+
+
+    @GetMapping
+    public ResponseEntity<?> retrieveTodoList(){
+        String temporaryUserId = "temporary-user";
+
+        List<TodoEntity> entities = service.retrieve(temporaryUserId);
+
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        ResponseDTO<TodoDTO> res = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        return ResponseEntity.ok().body(res);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
+        String temporaryUserId = "temporary-user";
+
+        TodoEntity entity = TodoDTO.toEntity(dto);
+
+        entity.setUserId(temporaryUserId);
+
+        List<TodoEntity> entities = service.update(entity);
+
+        List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+        ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
+        try {
+            String temporaryUserId = "temporary-user";
+
+            TodoEntity entity = TodoDTO.toEntity(dto);
+
+            entity.setUserId(temporaryUserId);
+
+            List<TodoEntity> entities = service.delete(entity);
+
+            List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+
+            ResponseDTO response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+
+            return ResponseEntity.ok().body(response);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+
+            String error = e.getMessage();
+
+            ResponseDTO response = ResponseDTO.<TodoDTO>builder().error(error).build();
+
+            return ResponseEntity.badRequest().body(response);
+
+        }
+    }
 }

@@ -1,9 +1,10 @@
-import React from "react"
+import React from "react";
+import {Button, Grid, Paper, TextField} from "@material-ui/core";
 
 class AddTodo extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { item: { title:"" } };
+        this.state ={item:{title:""}}
         this.add = props.add;
     }
 
@@ -14,6 +15,12 @@ class AddTodo extends React.Component {
         console.log(thisItem)
     }
 
+    enterKeyEventHandler = (e) => {
+        if(e.key === 'Enter') {
+            this.onButtonClick();
+        }
+    }
+
     onButtonClick = () => {
         this.add(this.state.item);
         this.setState({item:{title:""}});
@@ -21,15 +28,28 @@ class AddTodo extends React.Component {
 
     render() {
         return (
-            <div className="addTodo">
-                <input
-                    type="text"
-                    placeholder="Add Todo here"
-                    onChange={this.onInputChange}
-                    value={this.state.item.title}
-                />
-                <input type="button" value="+" onclick={this.onButtonClick}/>
-            </div>
+            <Paper style={{margin:16,padding:16}}>
+                <Grid container>
+                    <Grid xs={11} md={11} item style={{paddingRight:16}}>
+                        <TextField
+                            placeholder="Add Todo here"
+                            fullWidth
+                            onChange={this.onInputChange}
+                            value={this.state.item.title}
+                            onKeyPress={this.enterKeyEventHandler}
+                        />
+                    </Grid>
+                    <Grid xs={1} md={1} item>
+                        <Button fullWidth
+                                color="secondary"
+                                variant="outlined"
+                                onClick={this.onButtonClick}
+                        >
+                            +
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Paper>
         );
     }
 }

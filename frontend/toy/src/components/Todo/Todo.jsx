@@ -1,22 +1,77 @@
-import React from 'react'
+import React from 'react';
+import {Checkbox, IconButton, InputBase, ListItem, ListItemSecondaryAction, ListItemText} from "@material-ui/core";
+import {DeleteOutlined} from "@material-ui/icons";
 
 class Todo extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { item: props.item };
+        this.state = { item: props.item, readOnly: true };
+        this.delete = props.delete;
+        this.update = props.update;
+    }
+
+    checkboxEventHandler = (e) => {
+        const thisItem = this.state.item;
+        thisItem.done = !thisItem.done;
+        this.setState({ item: thisItem });
+    }
+
+    enterKeyEventHandler = (e) => {
+        if (e.key === "Enter") {
+            this.setState({ readOnly: true });
+        }
+    }
+
+    offReadOnlyMode = () => {
+        console.log("Event!", this.state.readOnly)
+        this.setState({ readOnly: false }, () => {
+            console.log("ReadOnly? ", this.state.readOnly)
+        });
+    }
+
+    editEventHandler = (e) => {
+        const thisItem = this.state.item;
+        thisItem.title = e.target.value;
+        this.setState({ item : thisItem });
+    }
+
+    deleteEventHandler = () => {
+        let seq = this.state.item.seq;
+        console.log(seq);
+        this.delete(this.state.item);
     }
 
     render() {
+        const item = this.state.item;
         return (
-            <div className="Todo">
-                <input
-                    type="checkbox"
-                    id={this.state.item.id}
-                    name={this.state.item.id}
-                    checked={this.state.item.done}
-                />
-                <label id={this.state.item.id}>{this.state.item.title}</label>
-            </div>
+            <ListItem>
+                <Checkbox checked={item.done} disableRipple onChange={this.checkboxEventHandler} />
+                <ListItemText>
+                    <InputBase
+                        inputProps={{
+                            "aria-label":"naked",
+                            readOnly: this.state.readOnly,
+                        }}
+                        type="text"
+                        id={item.seq.toString()}
+                        name={item.seq.toString()}
+                        value={item.title}
+                        multiline={true}
+                        fullWidth={true}
+                        onClick={this.offReadOnlyMode}
+                        onChange={this.editEventHandler}
+                        onKeyPress={this.enterKeyEventHandler}
+                    />
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    <IconButton
+                        aria-label="Delete Todo"
+                        onClick={this.deleteEventHandler}
+                    >
+                        <DeleteOutlined />
+                    </IconButton>
+                </ListItemSecondaryAction>
+            </ListItem>
         );
     }
 }

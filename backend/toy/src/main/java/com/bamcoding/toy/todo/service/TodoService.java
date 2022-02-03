@@ -8,9 +8,11 @@ public interface TodoService {
 
     String testService();
 
-    List<TodoEntity> findTodo();
+    List<TodoEntity> create(final TodoEntity entity);
 
-    boolean deleteTodo(TodoEntity todoEntity);
+    List<TodoEntity> retrieve(final String userId);
 
-    boolean saveTodo(TodoEntity todoEntity);
+    List<TodoEntity> update(final TodoEntity entity);
+
+    List<TodoEntity> delete(final TodoEntity entity);
 }
