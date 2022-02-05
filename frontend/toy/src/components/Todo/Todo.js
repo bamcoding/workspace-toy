@@ -13,12 +13,13 @@ class Todo extends React.Component {
     checkboxEventHandler = (e) => {
         const thisItem = this.state.item;
         thisItem.done = !thisItem.done;
-        this.setState({ item: thisItem });
+        this.update(thisItem);
     }
 
     enterKeyEventHandler = (e) => {
         if (e.key === "Enter") {
             this.setState({ readOnly: true });
+            this.update(this.state.item);
         }
     }
 
@@ -36,8 +37,8 @@ class Todo extends React.Component {
     }
 
     deleteEventHandler = () => {
-        let seq = this.state.item.seq;
-        console.log(seq);
+        let id = this.state.item.id;
+        console.log(id);
         this.delete(this.state.item);
     }
 

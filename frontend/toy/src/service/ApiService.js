@@ -1,10 +1,6 @@
 import { API_BASE_URL } from "../app-config";
 
 export function call(api, method, request) {
-    console.log("api : ",api);
-    console.log("method : ", method);
-    console.log("request : ", request);
-
     let options = {
         headers : new Headers({
             "Content-Type" : "application/json",
@@ -12,12 +8,13 @@ export function call(api, method, request) {
         url : API_BASE_URL + api,
         method: method,
     };
+
     if(request) {
         options.body = JSON.stringify(request);
     }
 
-    console.log("url : ",options.url)
-    console.log("options : ",options)
+    console.log("options : ",options);
+
     return fetch(options.url, options).then((response) =>
         response.json().then((json) => {
             if (!response.ok) {
@@ -25,5 +22,5 @@ export function call(api, method, request) {
             }
             return json;
         })
-    );
+    )
 }
