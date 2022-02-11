@@ -1,5 +1,6 @@
 package com.bamcoding.toy;
 
+import com.bamcoding.toy.security.TokenProvider;
 import com.bamcoding.toy.todo.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    TokenProvider tokenProvider;
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -39,12 +43,16 @@ public class UserController {
     @GetMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
         try{
-            UserEntity userEntity = userService.getByCredentials(userDTO.getEmail(),userDTO.getPassword());
+            UserEntity user = userService.getByCredentials(userDTO.getEmail(),userDTO.getPassword());
 
-            if(userEntity != null){
-                UserDTO responseUserDTO = UserDTO.builder()
-                        .email(userEntity.getEmail())
-                        .id(userEntity.getId())
+            if(user != null){
+                //토큰 생성
+                final String token = tokenProvider.create(user);
+
+                final UserDTO responseUserDTO = UserDTO.builder()
+                        .email(user.getEmail())
+                        .id(user.getId())
+                        .token(token)
                         .build();
                 return ResponseEntity.ok().body(responseUserDTO);
             } else {
@@ -52,6 +60,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body(responseDTO);
             }
         } catch(Exception e) {
+            e.printStackTrace();
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
