@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
-import Todo from './components/Todo/Todo';
+import Todo from './components/todo/Todo';
 import {Paper, List, Container} from "@material-ui/core";
-import AddTodo from "./components/Todo/AddTodo";
+import AddTodo from "./components/todo/AddTodo";
 import { call } from "./service/ApiService";
 
 class App extends React.Component {
