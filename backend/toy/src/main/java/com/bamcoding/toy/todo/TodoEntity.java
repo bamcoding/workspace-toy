@@ -1,4 +1,4 @@
-package com.bamcoding.toy.todo.entity;
+package com.bamcoding.toy.todo;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "Todo")
+@Table(name = "TodoInfo")
 public class TodoEntity {
     @Id
     @GeneratedValue(generator="system-uuid")

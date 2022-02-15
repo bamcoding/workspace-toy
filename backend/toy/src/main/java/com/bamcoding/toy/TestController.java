@@ -1,7 +1,8 @@
 package com.bamcoding.toy;
 
-import com.bamcoding.toy.todo.dto.ResponseDTO;
-import com.bamcoding.toy.todo.dto.TodoDTO;
+import com.bamcoding.toy.common.ResponseDTO;
+import com.bamcoding.toy.todo.TodoDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,19 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("test")
 public class TestController {
 
+    @GetMapping
+    public String test(){
+        log.error("test");
+        return "test";
+    }
+
     @GetMapping("pathVariable/{id}")
-    public String test(@PathVariable(required = false) int id){
+    public String pathVariable(@PathVariable(required = false) int id){
         return "Hello World! pathVariable ID "+id;
     }
 

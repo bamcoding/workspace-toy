@@ -1,4 +1,4 @@
-package com.bamcoding.toy;
+package com.bamcoding.toy.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

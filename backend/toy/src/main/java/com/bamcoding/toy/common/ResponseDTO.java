@@ -1,6 +1,5 @@
-package com.bamcoding.toy.todo.dto;
+package com.bamcoding.toy.common;
 
-import com.bamcoding.toy.todo.entity.TodoEntity;
 import lombok.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bamcoding.toy;
+package com.bamcoding.toy.user;
 
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Data
 @ToString
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
+@Table(name = "UserInfo",uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 public class UserEntity {
     @Id
     @GeneratedValue(generator = "system-uuid")

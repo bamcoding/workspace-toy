@@ -1,6 +1,5 @@
-package com.bamcoding.toy.todo.dto;
+package com.bamcoding.toy.todo;
 
-import com.bamcoding.toy.todo.entity.TodoEntity;
 import lombok.*;
 
 @Data

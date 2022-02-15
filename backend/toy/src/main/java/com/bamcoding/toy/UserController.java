@@ -1,10 +1,15 @@
 package com.bamcoding.toy;
 
+import com.bamcoding.toy.common.ResponseDTO;
 import com.bamcoding.toy.security.TokenProvider;
-import com.bamcoding.toy.todo.dto.ResponseDTO;
+import com.bamcoding.toy.user.UserDTO;
+import com.bamcoding.toy.user.UserEntity;
+import com.bamcoding.toy.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -18,8 +23,11 @@ public class UserController {
     @Autowired
     TokenProvider tokenProvider;
 
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+        log.info("call signup");
         try {
             UserEntity user = UserEntity.builder()
                     .email(userDTO.getEmail())
@@ -42,8 +50,9 @@ public class UserController {
 
     @GetMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
+        log.info("call signin");
         try{
-            UserEntity user = userService.getByCredentials(userDTO.getEmail(),userDTO.getPassword());
+            UserEntity user = userService.getByCredentials(userDTO.getEmail(),userDTO.getPassword(), passwordEncoder);
 
             if(user != null){
                 //토큰 생성

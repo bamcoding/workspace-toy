@@ -1,6 +1,6 @@
 package com.bamcoding.toy.security;
 
-import com.bamcoding.toy.UserEntity;
+import com.bamcoding.toy.user.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

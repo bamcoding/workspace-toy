@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -18,21 +19,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenProvider tokenProvider;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
+            // 요청에서 토큰 가져오기
             String token = parseBearerToken(request);
-
+            log.info("Filter is running..." + token);
+            // 토큰 검사하기. JWT 이므로 인가 서버에 요청하지 않아도 검증 가능
             if (token != null && !token.equalsIgnoreCase("null")) {
+                // userId 가져오기. 위조된 경우 예외 처리된다.
                 String userId = tokenProvider.validateAndGetUserId(token);
+                log.info("Authenticated user ID : "+userId);
 
-                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, null, AuthorityUtils.NO_AUTHORITIES);
+                // 인증 완료 SecurityContextHolder 에 등록해야 인증된 사용자라고 생각한다.
+                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userId, // 인증된 사용자의 정보. 문자열이 아니어도 ㅇ아무것이나 넣을 수 있다. 보통 userDetails 라는 오브젝트를 넣는다
+                        null,
+                        AuthorityUtils.NO_AUTHORITIES);
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -49,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     public String parseBearerToken(HttpServletRequest request) {
+        // Http 요청의 헤더를 파싱해 Bearer 토큰을 리턴한다.
         String bearerToken = request.getHeader("Authorization");
 
         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

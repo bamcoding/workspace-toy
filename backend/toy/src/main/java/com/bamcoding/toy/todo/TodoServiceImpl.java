@@ -1,14 +1,11 @@
-package com.bamcoding.toy.todo.service.Impl;
+package com.bamcoding.toy.todo;
 
-import com.bamcoding.toy.todo.entity.TodoEntity;
-import com.bamcoding.toy.todo.repository.TodoRepository;
-import com.bamcoding.toy.todo.service.TodoService;
-import lombok.Data;
+import com.bamcoding.toy.todo.TodoEntity;
+import com.bamcoding.toy.todo.TodoRepository;
+import com.bamcoding.toy.todo.TodoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;

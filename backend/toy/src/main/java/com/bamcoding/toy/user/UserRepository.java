@@ -1,4 +1,4 @@
-package com.bamcoding.toy;
+package com.bamcoding.toy.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

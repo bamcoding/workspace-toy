@@ -1,6 +1,4 @@
-package com.bamcoding.toy.todo.service;
-
-import com.bamcoding.toy.todo.entity.TodoEntity;
+package com.bamcoding.toy.todo;
 
 import java.util.List;
 

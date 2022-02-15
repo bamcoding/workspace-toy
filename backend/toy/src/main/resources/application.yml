@@ -5,7 +5,7 @@ spring:
     password: sMart2022@#$
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
-    hibernate:
-      ddl-auto: create
+#    hibernate:
+#      ddl-auto: create
     generate-ddl: true
     show-sql: true
