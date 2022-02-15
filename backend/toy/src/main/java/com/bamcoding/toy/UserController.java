@@ -48,7 +48,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/signin")
+    @PostMapping("/signin")
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
         log.info("call signin");
         try{

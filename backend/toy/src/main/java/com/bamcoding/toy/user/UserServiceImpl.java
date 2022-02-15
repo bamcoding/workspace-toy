@@ -30,8 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity getByCredentials(final String email, final String password, final PasswordEncoder encoder) {
         final UserEntity originalUser = userRepository.findByEmailAndPassword(email, password);
-
-        if(originalUser != null && encoder.matches(password,originalUser.getPassword())) {
+        if(originalUser != null && password.equals(originalUser.getPassword())) {
             return originalUser;
         }
 
