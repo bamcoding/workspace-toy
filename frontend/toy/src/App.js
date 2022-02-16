@@ -4,17 +4,21 @@ import Todo from './components/todo/Todo';
 import {Paper, List, Container, AppBar, Toolbar, Grid, Typography, Button} from "@material-ui/core";
 import AddTodo from "./components/todo/AddTodo";
 import { signout, call } from "./service/ApiService";
+import Loading from "./components/common/Loading";
 
 
 class App extends React.Component {
     constructor(props){
         super(props);
-        this.state = {items:[]}
+        this.state = {
+            items:[]
+            ,loading:true
+        }
     }
 
     componentDidMount = (item) => {
         call("/todo","GET",item).then((response) => {
-            this.setState({items: response.data});
+            this.setState({items: response.data,loading: false});
         });
     }
 
@@ -55,7 +59,7 @@ class App extends React.Component {
         let navigationBar = (
             <AppBar position="static">
                 <Toolbar>
-                    <Grid justify="space-between" container>
+                    <Grid justifyContent="space-between" container>
                         <Grid item>
                             <Typography variant="h6">오늘의 할일</Typography>
                         </Grid>
@@ -69,7 +73,7 @@ class App extends React.Component {
             </AppBar>
         );
 
-        return (
+        let todoListPage = (
             <div className="App">
                 {navigationBar}
                 <Container maxWidth="md">
@@ -79,7 +83,15 @@ class App extends React.Component {
                     </div>
                 </Container>
             </div>
-        )
+        );
+
+        let content = <Loading />;
+
+        if(!this.state.loading) {
+            content = todoListPage;
+        }
+
+        return <div className="App">{content}</div>
     }
 }
 
