@@ -50,3 +50,8 @@ export function signin(userDTO) {
             }
         });
 }
+
+export function signout(){
+    localStorage.removeItem(ACCESS_TOKEN);
+    window.location.href="/login"
+}
