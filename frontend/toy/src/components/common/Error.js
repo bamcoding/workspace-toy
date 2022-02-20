@@ -8,7 +8,7 @@ class Loading extends React.Component {
     render() {
         return (
             <div className="App">
-                <h1> 서버에 접근하실 수 없습니다...  </h1>
+                <h1> 서버에 접근하실 수 없습니다.  </h1>
                 <p onClick={this.loginLink}>로그인하러 가기</p>
             </div>
         )
