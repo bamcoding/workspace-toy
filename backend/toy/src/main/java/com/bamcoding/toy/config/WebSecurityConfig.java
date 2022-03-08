@@ -2,6 +2,8 @@ package com.bamcoding.toy.config;
 
 import com.bamcoding.toy.security.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,20 +19,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Override
+    public void configure(WebSecurity web) {
+        web.ignoring().antMatchers("/h2-console/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.cors()
             .and()
-            .csrf()
+                .csrf()
+                .ignoringAntMatchers("/h2-console/**")
                 .disable() // csrf 를 사용하지 않는다.
-            .httpBasic()
+                .httpBasic()
                 .disable() // basic 인증을 사용하지 않는다.
-            .sessionManagement()
+                .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authorizeRequests()
-                .antMatchers("/","/auth/**","/test/**").permitAll()
-            .anyRequest()
+                .authorizeRequests()
+                .antMatchers("/","/auth/**","/test/**","/h2-console/**").permitAll()
+                .anyRequest()
                 .authenticated();
 
         // filter 등록
