@@ -1,4 +1,7 @@
 spring:
+  batch:
+    job:
+      enabled: false # CommandLineRunner 서버 구동시 잡 런처 실행을 해제합니다. 스케줄러를 적용하기 위해서
   datasource:
     url: jdbc:oracle:thin:@db202201142010_medium?TNS_ADMIN=/Users/edward/Documents/Wallet_DB202201142010/
     username: ADMIN
