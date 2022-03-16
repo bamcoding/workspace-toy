@@ -1,0 +1,224 @@
+package com.example.java8to11;
+
+import com.example.java8to11.annotation.AnnotationImpl;
+import com.example.java8to11.lamda.DefaultFoo;
+import com.example.java8to11.lamda.Foo;
+import com.example.java8to11.lamda.Greeting;
+
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.Collectors;
+
+public class Application {
+
+    public static void main(String[] args) throws InterruptedException {
+        //StreamServiceImpl.excute(); //스트림 API
+        //OptionalServiceImpl.excute();
+        //DateTimeServiceImpl.excute();
+        //AnnotationImpl.excute(); //어노테이션의 변화
+        //ParallelArraySortImpl.excute();
+        CompletableFutureImpl.excute();
+
+        /**
+         * 람다 표현식(Lambda Expressions)
+         * 함수형 인터페이스의 인스턴스를 만드는 방법으로 쓰일 수 있다.
+         * 코드를 줄일 수 있다.
+         * 메소드 매개변수, 리턴 타입, 변수로 만들어 사용할 수도 있다.
+         */
+
+        //함수형 인터페이스를 인라인으로 구현한 특수한 형태의 오브젝트
+        //자바는 객체지향 언어이기 때문에 이러한 특수한 형태를 메소드 파라미터로 전달하거나 리턴할 수 있다.
+        //RunSomething runSomething = () -> System.out.println("Hello");
+        //runSomething.doIt();
+
+        /**
+         * 자바에서 함수형 프로그래밍
+         * 함수를 First class object로 사용할 수 있다.
+         * 순수 함수 (Pure function)
+         * - 사이드 이펙트 만들 수 없다. (함수 밖에 있는 값을 변경하지 못한다.)
+         * - 함수 밖에 정의되어 있는 상태가 없다.
+         * 고차 함수 (High-Order Function)
+         * - 함수가 함수를 매개변수로 받을 수 있고 함수를 리턴할 수도 있다.
+         * 불변성
+         */
+
+        /**
+         * 같은 값을 넣었는데 같은 값이 않나오는 여지가 있으면 순수 함수가 아니다?
+         */
+//        int baseNum = 10;
+//        RunSomething2 runSomething2 = num -> num + baseNum;
+//        System.out.println(runSomething2.doIt(3));
+//
+//        //10 더하기 함수
+//        Plus10 plus10 = new Plus10();
+//        System.out.println(plus10.apply(1));
+//
+//        //2 곱하기 함수
+//        Function<Integer, Integer> multiply2 = integer -> integer * 2;
+//        System.out.println(multiply2.apply(20));
+//
+//        Function multiply2AndPlus10 = plus10.compose(multiply2);
+//        System.out.println(multiply2AndPlus10.apply(10));
+//
+//        System.out.println(plus10.andThen(multiply2).apply(10));
+//
+////        int test2 = plus10.andThen(multiply2);
+//
+//        Supplier<Integer> supplier = new Supplier<Integer>() {
+//            @Override
+//            public Integer get() {
+//                return 5;
+//            }
+//        };
+//
+//        System.out.println(supplier.get());
+//
+//        BinaryOperator<Integer> binaryOperator = (o, o2) -> o + o2;
+//        System.out.println(binaryOperator.apply(1,2));
+//
+//        Greeting greeting = new Greeting("이근재");
+//
+//        System.out.println(greeting.hello("leegunj"));
+//
+//        UnaryOperator<String> hi = Greeting::hi;
+//        System.out.println(hi.apply("leegunj"));
+//
+//        Supplier<Greeting> sGreeting = Greeting::new;
+//        System.out.println(sGreeting.get().hello("leegunj"));
+//
+//        practiceFunctionalInterface();
+//        practiceMethodReference();
+//        printDefaultStaticMethod();
+//        printStream();
+    }
+
+    static void practiceFunctionalInterface() {
+        System.out.println(">> practiceFunctionalInterface Start!!!");
+
+        //입력값 없이 결과
+        Supplier<Integer> supplier = () -> 10;
+
+        //하나의 매개변수와 하나의 결과
+        Function<Integer,Integer> function = i -> i+1;
+
+        //위의 펑션 함수형 인터페이스와 다른점이 무엇일까?
+        //입력값과 결과값의 타입이 같은 경우 줄여서 사용할 수 있다.
+        UnaryOperator<Integer> unaryOperator = i -> i+10;
+    }
+
+    static void practiceMethodReference() {
+        System.out.println(">> practiceMethodReference Start!!!");
+
+        Function<Integer, String> intToString = i -> ""+i;
+        System.out.println(intToString.apply(200));
+
+        //이미 구현된 동일한 기능의 메소드가 있다면 메소트 참조를 한다.
+        UnaryOperator<String> hi = Greeting::hi;
+        System.out.println(hi.apply("leegunj"));
+
+        Supplier<Greeting> supplier = Greeting::new;
+        System.out.println(supplier.get().hello("leegunj"));
+
+        Function<String, Greeting> leegunj = Greeting::new;
+        System.out.println(leegunj.apply("leegunj").getName());
+
+        Function<Integer, Integer> test1 = i -> 10+i;
+        Function<Integer, Integer> test2 = i -> i * 2;
+        System.out.println(test1.apply(10));
+        System.out.println(test2.apply(20));
+        System.out.println(test1.andThen(test2).apply(20));
+        System.out.println(test1.compose(test2).apply(20));
+
+        //불특정 다수의 인스턴스의 메소드를 참조?
+        String[] names = {"lee","kim","sin"};
+        Arrays.sort(names, String::compareToIgnoreCase);
+        System.out.println(Arrays.toString(names));
+
+    }
+
+    static void printDefaultStaticMethod(){
+        System.out.println(">> DefaultStaticMethod Start!!!");
+        Foo foo = new DefaultFoo("leegunj");
+        foo.printName();
+        foo.printNameUpperCase();
+
+        List<String> list = new ArrayList<>();
+        list.add("lee");
+        list.add("sin");
+        list.add("kim");
+        list.add("park");
+
+        //1
+        System.out.println("1. foreach ========");
+        list.forEach(System.out::println);
+
+        //2
+        System.out.println("2. spliterator ========");
+        Spliterator<String> spliterator = list.spliterator();
+        Spliterator<String> spliterator1 = spliterator.trySplit();
+        while(spliterator.tryAdvance(System.out::println));
+        System.out.println("===============");
+        while(spliterator1.tryAdvance(System.out::println));
+
+        System.out.println("3. stream ======");
+        List<String> list2 = list.stream()
+                .map(String::toUpperCase)
+                .filter(s -> s.startsWith("L"))
+                .collect(Collectors.toList());
+
+        System.out.println(list2.toString());
+
+        System.out.println("4. removeIf =======");
+        list.removeIf(s -> s.startsWith("l"));
+        System.out.println(list.toString());
+
+        System.out.println("5. comparaotr =======");
+        Comparator<String> compare2 = String::compareToIgnoreCase;
+        list.sort(compare2.reversed());
+        System.out.println(list.toString());
+    }
+
+    static void printStream(){
+        System.out.println("Stream start !!!");
+        List<String> list = new ArrayList<>();
+        list.add("lee");
+        list.add("sin");
+        list.add("kim");
+        list.add("park");
+
+        System.out.println("===================1");
+        list.stream().map(s->{
+            //중개 오퍼레이션이므로 종료 오퍼레이션이 호출되기 전까지는 동작하지 않는다.
+            System.out.println("스트림 대문자 처리: "+s.toUpperCase());
+            System.out.println(s+" "+Thread.currentThread().getName());
+//            스트림 대문자 처리: LEE
+//            lee main
+//            스트림 대문자 처리: SIN
+//            sin main
+//            스트림 대문자 처리: KIM
+//            kim main
+//            스트림 대문자 처리: PARK
+//            park main
+            return s.toUpperCase();
+        }).collect(Collectors.toList());
+
+        System.out.println("===================2");
+        //원본 소스는 변경되지 않는다.
+        list.forEach(System.out::println);
+
+        //손쉽게 병렬처리를 할 수 있다.
+        List<String> result = list
+                .parallelStream()
+                .filter(s -> {
+                    System.out.println(s+" "+Thread.currentThread().getName());
+//                    kim main
+//                    park ForkJoinPool.commonPool-worker-5
+//                    lee ForkJoinPool.commonPool-worker-7
+//                    sin ForkJoinPool.commonPool-worker-3
+                    return s.startsWith("l");
+                })
+                .collect(Collectors.toList());
+        System.out.println("test===");
+        System.out.println(result.toString());
+    }
+}
