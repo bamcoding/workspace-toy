@@ -4,20 +4,80 @@ import com.example.java8to11.annotation.AnnotationImpl;
 import com.example.java8to11.lamda.DefaultFoo;
 import com.example.java8to11.lamda.Foo;
 import com.example.java8to11.lamda.Greeting;
+import org.springframework.ui.context.Theme;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
 public class Application {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         //StreamServiceImpl.excute(); //스트림 API
         //OptionalServiceImpl.excute();
         //DateTimeServiceImpl.excute();
         //AnnotationImpl.excute(); //어노테이션의 변화
         //ParallelArraySortImpl.excute();
-        CompletableFutureImpl.excute();
+        //CompletableFutureImpl.excute();
+
+//        ExecutorService executorService = Executors.newFixedThreadPool(2);
+//        //executorService.execute(()->System.out.println("ExecutorService Thread: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread1: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread2: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread3: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread4: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread5: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread6: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread7: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread8: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread9: "+Thread.currentThread().getName()));
+//        executorService.submit(()->System.out.println("ExecutorService Thread10: "+Thread.currentThread().getName()));
+//        //다음 작업이 들어올 때까지 대기하기 때문에 프로세스가 죽지 않는다.
+//        //명시적으로 셧다운을 해야합니다.
+//        executorService.shutdown();
+
+//        long start = System.currentTimeMillis();
+//        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+//        scheduledExecutorService.scheduleAtFixedRate(() -> {
+//                    System.out.println((System.currentTimeMillis()-start)/1000+"초가 지났습니다.");
+//                    System.out.println("ScheduledExecutorService Thread: "+Thread.currentThread().getName());
+//                }
+//                ,3,2, TimeUnit.SECONDS);
+//        //맨 처음 3초 후 실행 이후 2초마다 실행
+//        Thread.sleep(10000);
+//        System.out.println((System.currentTimeMillis()-start)/1000+"초가 지났습니다. shutdown");
+//        scheduledExecutorService.shutdown();
+
+//        long start = System.currentTimeMillis();
+//        ExecutorService executorService = Executors.newSingleThreadExecutor();
+//        Callable<String> hello = new Callable<String>() {
+//            @Override
+//            public String call() throws Exception {
+//                Thread.sleep(2000L);
+//                System.out.println((System.currentTimeMillis()-start)/1000+"초가 지났습니다.");
+//                System.out.println(Thread.currentThread().getName());
+//                return "Hello";
+//            }
+//        };
+//
+//        Future<String> future = executorService.submit(hello);
+//        System.out.println("start status: "+future.isDone());
+//        String h = future.get();// 블록킹콜
+//        System.out.println(h);
+//        System.out.println("end status: "+future.isDone());
+//        Thread.sleep(10000);
+//        executorService.shutdown();
+
+        String str = "hello java";
+        char s = str.charAt(1);
+        System.out.println(s);
+
+        for(int i=0;i<10;i++) {
+            Thread thread = new Thread(() -> System.out.println("hello-"+Thread.currentThread().getName()));
+            thread.start();
+        }
+
 
         /**
          * 람다 표현식(Lambda Expressions)
