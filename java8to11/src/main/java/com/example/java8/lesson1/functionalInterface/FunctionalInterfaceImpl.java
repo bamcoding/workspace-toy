@@ -1,9 +1,9 @@
-package com.example.java8to11.lesson1.functionalInterface;
+package com.example.java8.lesson1.functionalInterface;
 
 import java.util.function.Function;
 
 public class FunctionalInterfaceImpl {
-    public static void excute(){
+    public static void run(){
         RunSomething runSomething = new RunSomething() {
             @Override
             public void doIt() {

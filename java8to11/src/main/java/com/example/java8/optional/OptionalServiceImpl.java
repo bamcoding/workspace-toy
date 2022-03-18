@@ -1,7 +1,6 @@
-package com.example.java8to11.optional;
+package com.example.java8.optional;
 
-import com.example.java8to11.vo.OnlineClass;
-import com.example.java8to11.vo.Progress;
+import com.example.java8.vo.OnlineClass;
 
 import java.util.ArrayList;
 import java.util.List;

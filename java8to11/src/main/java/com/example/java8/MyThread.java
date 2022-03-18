@@ -1,4 +1,4 @@
-package com.example.java8to11;
+package com.example.java8;
 
 public class MyThread extends Thread {
 

@@ -1,6 +1,4 @@
-package com.example.java8to11.lesson1.lamda;
-
-import java.util.Locale;
+package com.example.java8.lesson1.lamda;
 
 
 public interface Foo {

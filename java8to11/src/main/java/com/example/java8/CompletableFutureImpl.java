@@ -1,6 +1,4 @@
-package com.example.java8to11;
-
-import java.util.concurrent.*;
+package com.example.java8;
 
 //비동기 프로그래밍에 가깝다.
 public class CompletableFutureImpl {

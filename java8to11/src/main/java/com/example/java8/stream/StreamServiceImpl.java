@@ -1,7 +1,6 @@
-package com.example.java8to11.stream;
+package com.example.java8.stream;
 
-import com.example.java8to11.vo.OnlineClass;
-import org.springframework.util.concurrent.ListenableFutureCallback;
+import com.example.java8.vo.OnlineClass;
 
 import java.util.ArrayList;
 import java.util.Collection;

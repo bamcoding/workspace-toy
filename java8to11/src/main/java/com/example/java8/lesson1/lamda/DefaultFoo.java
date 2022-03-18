@@ -1,4 +1,4 @@
-package com.example.java8to11.lesson1.lamda;
+package com.example.java8.lesson1.lamda;
 
 public class DefaultFoo implements Foo{
 

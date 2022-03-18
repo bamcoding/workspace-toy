@@ -1,4 +1,4 @@
-package com.example.java8to11.annotation;
+package com.example.java8.annotation;
 
 import java.util.Arrays;
 

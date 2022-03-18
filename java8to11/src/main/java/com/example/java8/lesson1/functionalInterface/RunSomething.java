@@ -1,4 +1,4 @@
-package com.example.java8to11.lesson1.functionalInterface;
+package com.example.java8.lesson1.functionalInterface;
 
 /**
  * 함수형 인터페이스

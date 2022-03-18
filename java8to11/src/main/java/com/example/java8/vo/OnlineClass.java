@@ -1,4 +1,4 @@
-package com.example.java8to11.vo;
+package com.example.java8.vo;
 
 import java.util.Optional;
 
