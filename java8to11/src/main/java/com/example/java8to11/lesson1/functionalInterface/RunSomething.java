@@ -1,4 +1,4 @@
-package com.example.java8to11.lamda;
+package com.example.java8to11.lesson1.functionalInterface;
 
 /**
  * 함수형 인터페이스
@@ -12,14 +12,15 @@ package com.example.java8to11.lamda;
 @FunctionalInterface
 public interface RunSomething {
 
+    //추상 메소드
     void doIt();
 
     static void printName(){
-        System.out.println("leegunj");
+        System.out.println("static");
     }
 
     default void printAge(){
-        System.out.println("40");
+        System.out.println("default");
     }
 
 }

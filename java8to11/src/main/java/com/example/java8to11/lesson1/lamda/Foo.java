@@ -1,4 +1,4 @@
-package com.example.java8to11.lamda;
+package com.example.java8to11.lesson1.lamda;
 
 import java.util.Locale;
 

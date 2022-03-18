@@ -1,10 +1,8 @@
 package com.example.java8to11;
 
-import com.example.java8to11.annotation.AnnotationImpl;
-import com.example.java8to11.lamda.DefaultFoo;
-import com.example.java8to11.lamda.Foo;
-import com.example.java8to11.lamda.Greeting;
-import org.springframework.ui.context.Theme;
+import com.example.java8to11.lesson1.lamda.DefaultFoo;
+import com.example.java8to11.lesson1.lamda.Foo;
+import com.example.java8to11.lesson1.lamda.Greeting;
 
 import java.util.*;
 import java.util.concurrent.*;
