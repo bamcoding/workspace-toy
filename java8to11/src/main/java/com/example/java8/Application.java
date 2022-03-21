@@ -6,7 +6,6 @@ import java.util.function.*;
 import java.util.stream.Collectors;
 
 public class Application {
-
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         //lesson1. 함수형 인터페이스
         //FunctionalInterfaceImpl.run();
@@ -82,10 +81,6 @@ public class Application {
 //        System.out.println("end status: "+future.isDone());
 //        Thread.sleep(10000);
 //        executorService.shutdown();
-
-        String str = "hello java";
-        char s = str.charAt(1);
-        System.out.println(s);
 
         for(int i=0;i<10;i++) {
             Thread thread = new Thread(() -> System.out.println("hello-"+Thread.currentThread().getName()));
