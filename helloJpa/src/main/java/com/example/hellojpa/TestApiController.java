@@ -20,10 +20,6 @@ public class TestApiController {
 
     @GetMapping
     String test(){
-        Member member = Member.builder()
-                .id(1L)
-                .name("스프링")
-                .build();
         System.out.println(member.toString());
         memberRepository.save(member);
 
