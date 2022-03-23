@@ -29,4 +29,8 @@ public class Order {
     public void setMember(Member member) {
         this.member = member;
     }
+
+    public String toString(){
+        return "Order:{id:"+id+"}";
+    }
 }

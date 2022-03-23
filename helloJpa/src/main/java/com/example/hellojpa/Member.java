@@ -18,6 +18,17 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team; //연관관계의 주인
+
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker; //연관관계의 주인
+
+    public Member() {
+    }
+
     public String getCity() {
         return city;
     }
@@ -56,5 +67,9 @@ public class Member {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toString(){
+        return "Member:{id:"+id+",name:"+name+"}";
     }
 }
