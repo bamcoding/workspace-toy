@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            // 요청에서 토큰 가져오기
+            // 요청에서 토큰
             String token = parseBearerToken(request);
             log.info("Filter is running..." + token);
             // 토큰 검사하기. JWT 이므로 인가 서버에 요청하지 않아도 검증 가능
