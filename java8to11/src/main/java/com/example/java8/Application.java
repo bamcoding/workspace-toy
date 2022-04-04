@@ -82,6 +82,15 @@ public class Application {
 //        Thread.sleep(10000);
 //        executorService.shutdown();
 
+        String lee = "leegunj";
+
+        System.out.println(lee.charAt(0));
+        System.out.println(lee.charAt(1));
+        System.out.println(lee.charAt(2));
+        System.out.println(lee.charAt(3));
+        System.out.println(lee.length());
+
+
         for(int i=0;i<10;i++) {
             Thread thread = new Thread(() -> System.out.println("hello-"+Thread.currentThread().getName()));
             thread.start();
