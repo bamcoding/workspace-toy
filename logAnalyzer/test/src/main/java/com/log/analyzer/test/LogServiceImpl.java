@@ -6,76 +6,32 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 public class LogServiceImpl implements LogService {
-    /*
-    * 로그 파일을 읽어들입니다.
-    *
-    * 반드시 파일 I/O 처리를 해야 합니다.
-    * 입력은 다음과 같은 형식의 input.log 파일로 전달되어야 합니다.
-    * [200][http://apis.dktechin.net/search/vclip?apikey=fwji&q=dktechin][IE][2019-06-10 08:01:29]
-    *
-    * */
+
+    private String[] WebBrowser = {"ie","firefox","safari","chrome","opera"};
+
     @Override
     public List<LogVO> logRead() {
+        long startTime = System.currentTimeMillis();
 
-        //1. 파일이 존재하지 않으면 리턴합니다. NoSuchFileException 발생하지 않게 합니다.
-        File file = new File(logFilePath);
-        if(!file.exists()) return null;
+        if(!new File(inputLogPath).exists()) return null;
 
         try {
-            /*
-            * 자바 1.7 이후부터 java.noi.file 을 지원합니다.
-            * 파일 읽어들이는 코드가 굉장히 간단합니다.
-            * 한 줄이면 끝이고 리턴타입이 리스트 타입이라 스트림 API를 사용하기 편합니다. 해당 API를 사용하도록 하겠습니다.
-            * IO Exception과 Security Exception이 발생할 수 있다고 합니다.
-            * */
-            List<String> strList = Files.readAllLines(Paths.get(logFilePath));
-
-            List<LogVO> logList = strList.stream().map(s -> {
-                String[] sp =  s.replaceAll("\\[","").split("\\]");
-                //Arrays.asList(sp).stream().forEach(System.out::println); 문자열 변환 체크 완료
-                LogVO log = new LogVO();
-                log.setStatusCode(sp[0]);   //상태코드
-                log.setUrl(sp[1]);          //URL
-
-                String[] url = sp[1].split("\\/");
-                String tempServiceId = url[url.length - 1];
-
-                log.setApiServiceId(tempServiceId.split("\\?")[0]);
-
-                if(tempServiceId.split("\\?")[1] != null){
-                    String[] params = tempServiceId.split("\\?")[1].split("&");
-
-                    if(params[0] != null) log.setApiKey(params[0]);
-                    if(params[1] != null) log.setApiQ(params[1]);
-                }
-
-                log.setWebBrowser(sp[2]);   //브라우저
-                log.setStrCreateDate(sp[3]);//호출시간
-                return log;
-            }).collect(Collectors.toList());
-
-            //결과
-            //logList.stream().forEach(item-> System.out.println(item.toString()));
-
-            return logList;
+            List<String> lineList = Files.readAllLines(Paths.get(inputLogPath));
+            List<LogVO> logVOList = lineList.stream().map(line->setLog(line)).collect(Collectors.toList());
+            return logVOList;
         }
-        catch(IOException ioe) {
-            System.out.println("IOE 에러가 발생했습니다.");
-            ioe.printStackTrace();
+        catch (IOException e) {
+            System.out.println("logRead IOException - " + e.getMessage());
         }
-        catch(SecurityException se) {
-            System.out.println("SE 에러가 발생했습니다.");
-        }
-        catch (Exception e) {
-            System.out.println("E 에러가 발생했습니다.");
+        finally {
+            System.out.println("it take - " + (System.currentTimeMillis()-startTime)/1000.0 + "s");
         }
 
         return null;
@@ -83,18 +39,87 @@ public class LogServiceImpl implements LogService {
 
     @Override
     public Map<String, String> logProcessor(List<LogVO> logVOList) {
+
+        if(logVOList == null || logVOList.size() == 0) return null;
+
+        logVOList = logVOList.stream().filter(logVO -> logVO.getStatusCode().equals("200")).collect(Collectors.toList());
+
         System.out.println("size: "+ logVOList.size());
 
-        logVOList.stream().forEach(vo-> System.out.println(vo.toStringURL()));
+        //blog, book, image, knowledge, news, vclip 중 하나
+        int blog = 0;
+        int book = 0;
+        int image = 0;
+        int knowledge = 0;
+        int news = 0;
+        int vclip = 0;
+
+        int ie = 0;
+        int firefox = 0;
+        int safari = 0;
+        int chrome = 0;
+        int opera = 0;
+
+        for(LogVO logVO:logVOList) {
+            switch (logVO.getApiServiceId().toLowerCase()) {
+                case "blog":
+                    blog++;
+                    break;
+                case "book":
+                    book++;
+                    break;
+                case "image":
+                    image++;
+                    break;
+                case "knowledge":
+                    knowledge++;
+                    break;
+                case "news":
+                    news++;
+                    break;
+                case "vclip":
+                    vclip++;
+                    break;
+            }
+
+            switch (logVO.getWebBrowser().toLowerCase()) {
+                case "ie":
+                    ie++;
+                    break;
+                case "firefox":
+                    firefox++;
+                    break;
+                case "safari":
+                    safari++;
+                    break;
+                case "chrome":
+                    chrome++;
+                    break;
+                case "opera":
+                    opera++;
+                    break;
+            }
+        }
+
+        System.out.println("blog = " + blog);
+        System.out.println("book = " + book);
+        System.out.println("image = " + image);
+        System.out.println("knowledge = " + knowledge);
+        System.out.println("news = " + news);
+        System.out.println("vclip = " + vclip);
+
+
+        System.out.println("ie = " + ie);
+        System.out.println("firefox = " + firefox);
+        System.out.println("firefox = " + safari);
+        System.out.println("chrome = " + chrome);
+        System.out.println("opera = " + opera);
 
         return null;
     }
 
     @Override
     public boolean logWrite(List<LogVO> logVOList) {
-
-        String outputFileName = "output_"+ new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + ".log";
-        String outputLogPath = logPath + "/" + outputFileName;
 
         try{
             //1. 파일이 있는지 확인하고 지웁니다.
@@ -119,5 +144,34 @@ public class LogServiceImpl implements LogService {
         }
 
         return false;
+    }
+
+    private LogVO setLog(String line) {
+        String[] sp =  line.replaceAll("\\[","").split("\\]");
+        LogVO log = new LogVO();
+        log.setStatusCode(sp[0]);   //상태코드
+        log.setUrl(sp[1]);          //URL
+        log.setWebBrowser(sp[2]);   //브라우저
+        log.setStrCreateDate(sp[3]);//호출시간
+
+        setApiParams(log);
+        return log;
+    }
+
+    private void setApiParams(LogVO logVO) {
+        String[] splitService = logVO.getUrl().split("\\/");
+        String[] splitServiceId = splitService[splitService.length-1].split("\\?");
+
+        logVO.setApiServiceId(splitServiceId[0]);
+
+        String[] splitParams = splitServiceId[splitServiceId.length-1].split("&");
+        Map<String,String> map = Arrays.asList(splitParams).stream()
+                .collect(Collectors.toMap(
+                        p1->p1.split("=")[0],
+                        p2->p2.split("=")[1]
+                ));
+
+        logVO.setApiKey(map.get("apikey"));
+        logVO.setApiQ(map.get("q"));
     }
 }

@@ -15,8 +15,8 @@ import java.util.Map;
 * JAVA8 이상
 * */
 public interface LogService {
-    static final String logPath = "src/main/resources";
-    static final String logFilePath = "src/main/resources/input.log";
+    String inputLogPath = "src/main/resources/input.log";
+    String outputLogPath = "src/main/resources/output.log";
 
     List<LogVO> logRead();
 
