@@ -1,177 +1,132 @@
 package com.log.analyzer.test;
 
-import org.springframework.stereotype.Service;
+import java.util.*;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+// Open API 담당자인 당신은 로그 분석을 위한 프로그램이 필요합니다.
+// Open API 호출 기록은 모두 웹 로그 형태로 남아 있습니다.
+// 첨부한 로그 파일을 분석하여 아래 결과를 파일로 출력하는 프로그램을 구현해 주세요.
+// 1. 최다호출 apikey
+// 2. (호출 횟수 기준)상위 3개의 API ServiceID와 각각의 요청 수
+// 3. 웹브라우저별 사용 비율
+// - 호출횟수는 상태코드가 200 으로 정상인 경우에만 카운트해야 합니다.
+// - 최대호출 APIKEY : 호출횟수가 가장 많은 APIKEY
+// - 상위 3개의 API ServiceId와 각각의 요청 수 : 요청 수가 상위 3위 이내인 APIServiceID와 요청 횟수 출력
+// - 요청 횟수가 동일한 경우가 발생하면 어떤것을 출력해도 상관없음
+// - 웹브라우저별 사용 비율 : 정상요청인 경우, 요청 브라우저의 사용 비율
+public class LogServiceImpl{
 
-@Service
-public class LogServiceImpl implements LogService {
+    //private String[] webBrowser = {"ie","firefox","safari","chrome","opera"};
+    //private String[] apiServiceId = {"blog","book","image","knowledge","news","vclip"};
 
-    private String[] WebBrowser = {"ie","firefox","safari","chrome","opera"};
+    public String makeRankString(String txt) {
+        String[] strLogArray = {"[200][http://apis.dktechin.net/search/knowledge?apikey=23jf&q=dktechin][IE][2019-06-10 08:00:00]"
+                ,"[200][http://apis.dktechin.net/search/knowledge?apikey=dcj8&q=dktechin][IE][2019-06-10 08:00:01]"
+                ,"[200][http://apis.dktechin.net/search/blog?apikey=wejf&q=dktechin][IE][2019-06-10 08:00:02]"
+                ,"[200][http://apis.dktechin.net/search/knowledge?apikey=e3ea&q=dktechin][IE][2019-06-10 08:00:03]"
+                ,"[200][http://apis.dktechin.net/search/vclip?apikey=2jdc&q=dktechin][IE][2019-06-10 08:00:04]"};
 
-    @Override
-    public List<LogVO> logRead() {
-        long startTime = System.currentTimeMillis();
+        // 집계 결과를 저장할 맵
+        Map<String,Integer> countWebBrowserMap = new HashMap<>();
+        Map<String,Integer> countApiServiceIdMap = new HashMap<>();
+        Map<String,Integer> countApiKeyMap = new HashMap<>();
 
-        if(!new File(inputLogPath).exists()) return null;
+        Iterator<String> strLogItr = Arrays.asList(strLogArray).iterator();
+        while(strLogItr.hasNext()) {
+            // [0]상태코드 [1]URL [2]웹브라우저 [3]호출시간
+            String[] column = strLogItr.next().replaceAll("\\[","").split("\\]");
 
-        try {
-            List<String> lineList = Files.readAllLines(Paths.get(inputLogPath));
-            List<LogVO> logVOList = lineList.stream().map(line->setLog(line)).collect(Collectors.toList());
-            return logVOList;
+            // 200 호출 성공 건에 대해서 집계를 수행합니다.
+            if(!column[0].equals("200")) continue;
+
+            // 집계 - 1.웹브라우저 이름을 키로 가진 카운트를 계산합니다.
+            countValue(countWebBrowserMap, column[2]);
+
+            // 집계 - 2.api service id를 키로 가진 카운트를 계산합니다.
+            String[] slushSplit = column[1].split("\\/");
+            String[] apiServiceSplit = slushSplit[slushSplit.length-1].split("\\?");
+            countValue(countApiServiceIdMap, apiServiceSplit[0]);
+
+            // 집계 - 3.api key를 키로 가진 카운트를 계산합니다.
+            String[] paramSplit = apiServiceSplit[1].split("\\&");
+            String[] keyValueSplit = paramSplit[0].split("=");
+            countValue(countApiKeyMap, keyValueSplit[1]);
         }
-        catch (IOException e) {
-            System.out.println("logRead IOException - " + e.getMessage());
-        }
-        finally {
-            System.out.println("it take - " + (System.currentTimeMillis()-startTime)/1000.0 + "s");
-        }
 
-        return null;
+        // output.log에 저장할 문자열 생성
+        StringBuilder sb = new StringBuilder();
+        sb.append(getFirstResult(countApiKeyMap)).append("\n");
+        sb.append(getSecondResult(countApiServiceIdMap)).append("\n");
+        sb.append(getThirdResult(countWebBrowserMap));
+        System.out.println(sb);
+
+        return sb.toString();
     }
 
-    @Override
-    public Map<String, String> logProcessor(List<LogVO> logVOList) {
+    String getThirdResult(Map<String,Integer> countWebBrowserMap) {
+        int totalCount = countWebBrowserMap.values().stream().reduce(0, Integer::sum);
+        String retStr = "웹브라우저별 사용비율 \n";
+        for(String key : countWebBrowserMap.keySet()) {
+            retStr += key +" : "+ countWebBrowserMap.get(key) / totalCount * 100 + "%";
+        }
+        return retStr;
+    }
 
-        if(logVOList == null || logVOList.size() == 0) return null;
+    String getSecondResult(Map<String,Integer> countApiServiceIdMap) {
+        List<Map<String,Integer>> rankedList = new ArrayList<>();
+        Map<String,Integer> totalMap = null;
 
-        logVOList = logVOList.stream().filter(logVO -> logVO.getStatusCode().equals("200")).collect(Collectors.toList());
+        for(int i=0;i<3;i++) {
+            String maxKey = "";
+            int maxCount = 0;
+            boolean isContinue = false;
 
-        System.out.println("size: "+ logVOList.size());
+            for(String key : countApiServiceIdMap.keySet()) {
 
-        //blog, book, image, knowledge, news, vclip 중 하나
-        int blog = 0;
-        int book = 0;
-        int image = 0;
-        int knowledge = 0;
-        int news = 0;
-        int vclip = 0;
+                for(Map<String,Integer> tempData : rankedList) {
+                    if(tempData.containsKey(key)) isContinue = true;
+                }
 
-        int ie = 0;
-        int firefox = 0;
-        int safari = 0;
-        int chrome = 0;
-        int opera = 0;
+                if(isContinue) {
+                    isContinue = false;
+                    continue;
+                }
 
-        for(LogVO logVO:logVOList) {
-            switch (logVO.getApiServiceId().toLowerCase()) {
-                case "blog":
-                    blog++;
-                    break;
-                case "book":
-                    book++;
-                    break;
-                case "image":
-                    image++;
-                    break;
-                case "knowledge":
-                    knowledge++;
-                    break;
-                case "news":
-                    news++;
-                    break;
-                case "vclip":
-                    vclip++;
-                    break;
+                if(maxCount < countApiServiceIdMap.get(key)) {
+                    maxKey = key;
+                    maxCount = countApiServiceIdMap.get(key);
+                }
             }
+            totalMap = new HashMap<String,Integer>();
+            totalMap.put(maxKey, maxCount);
+            rankedList.add(totalMap);
+        }
 
-            switch (logVO.getWebBrowser().toLowerCase()) {
-                case "ie":
-                    ie++;
-                    break;
-                case "firefox":
-                    firefox++;
-                    break;
-                case "safari":
-                    safari++;
-                    break;
-                case "chrome":
-                    chrome++;
-                    break;
-                case "opera":
-                    opera++;
-                    break;
+        String retStr = "상위 3개의 API ServiceID와 각각의 요청 수 \n";
+        for(Map<String,Integer> rankedData : rankedList) {
+            for(String key : rankedData.keySet()) {
+                retStr += key +" : "+ rankedData.get(key)  + "\n";
             }
         }
-
-        System.out.println("blog = " + blog);
-        System.out.println("book = " + book);
-        System.out.println("image = " + image);
-        System.out.println("knowledge = " + knowledge);
-        System.out.println("news = " + news);
-        System.out.println("vclip = " + vclip);
-
-
-        System.out.println("ie = " + ie);
-        System.out.println("firefox = " + firefox);
-        System.out.println("firefox = " + safari);
-        System.out.println("chrome = " + chrome);
-        System.out.println("opera = " + opera);
-
-        return null;
+        return retStr;
     }
 
-    @Override
-    public boolean logWrite(List<LogVO> logVOList) {
-
-        try{
-            //1. 파일이 있는지 확인하고 지웁니다.
-            boolean isExist = Files.exists(Paths.get(outputLogPath));
-            if(isExist) Files.delete(Paths.get(outputLogPath));
-
-            //2. 새 파일을 생성합니다.
-            OutputStream outputStream = Files.newOutputStream(Files.createFile(Paths.get(outputLogPath)));
-
-            StringBuffer sb = new StringBuffer();
-            logVOList.stream().forEach(vo->{
-                sb.append(vo.toString()+"\n");
-            });
-
-            outputStream.write(sb.toString().getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();//바로 쓰기
-            outputStream.close();//시스템 메모리 해방
-            return true;
-
-        } catch(IOException ioe) {
-            System.out.println("logWrite에서 IOE 에러가 발생했습니다.");
+    String getFirstResult(Map<String,Integer> countApiKeyMap) {
+        int maxApiKeyValue = Collections.max(countApiKeyMap.values());
+        String maxApiKey = "";
+        for(String key : countApiKeyMap.keySet()) {
+            if(countApiKeyMap.get(key) == maxApiKeyValue) {
+                maxApiKey = key;
+            }
         }
-
-        return false;
+        return "최대 호출 APIKEY\n" + maxApiKey+"\n";
     }
 
-    private LogVO setLog(String line) {
-        String[] sp =  line.replaceAll("\\[","").split("\\]");
-        LogVO log = new LogVO();
-        log.setStatusCode(sp[0]);   //상태코드
-        log.setUrl(sp[1]);          //URL
-        log.setWebBrowser(sp[2]);   //브라우저
-        log.setStrCreateDate(sp[3]);//호출시간
-
-        setApiParams(log);
-        return log;
+    void countValue(Map<String, Integer> logResultMap, String key) {
+        if(logResultMap.get(key) == null) {
+            logResultMap.put(key,1);
+        } else {
+            logResultMap.put(key,logResultMap.get(key)+1);
+        }
     }
 
-    private void setApiParams(LogVO logVO) {
-        String[] splitService = logVO.getUrl().split("\\/");
-        String[] splitServiceId = splitService[splitService.length-1].split("\\?");
-
-        logVO.setApiServiceId(splitServiceId[0]);
-
-        String[] splitParams = splitServiceId[splitServiceId.length-1].split("&");
-        Map<String,String> map = Arrays.asList(splitParams).stream()
-                .collect(Collectors.toMap(
-                        p1->p1.split("=")[0],
-                        p2->p2.split("=")[1]
-                ));
-
-        logVO.setApiKey(map.get("apikey"));
-        logVO.setApiQ(map.get("q"));
-    }
 }
