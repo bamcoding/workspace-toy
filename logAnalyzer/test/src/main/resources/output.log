@@ -1,10 +1,14 @@
 최대 호출 APIKEY
-2jdc
+e3ea
 
 상위 3개의 API ServiceID와 각각의 요청 수 
-knowledge : 3
-vclip : 1
-blog : 1
+knowledge : 809
+news : 803
+blog : 799
 
 웹브라우저별 사용비율 
-IE : 100%
+IE : 85%
+Firefox : 7%
+Opera : 3%
+Chrome : 3%
+Safari : 2%
