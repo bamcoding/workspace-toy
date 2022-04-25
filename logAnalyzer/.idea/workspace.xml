@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="23560781-3086-4e8a-a950-0f7c530278a1" name="Changes" comment="" />
+    <list default="true" id="23560781-3086-4e8a-a950-0f7c530278a1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/log/analyzer/LogApplicationMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/log/analyzer/LogServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/src/main/java/com/log/file/FileUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/test/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/main/java/com/log/analyzer/test/FileUtils.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/main/java/com/log/analyzer/test/LogApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/main/java/com/log/analyzer/test/LogServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/main/resources/output.log" beforeDir="false" afterPath="$PROJECT_DIR$/test/src/main/resources/output.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/src/test/java/com/log/analyzer/test/TestApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +23,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="278lx1ty9SYJAVkaQYJbyZuhwgV" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -32,6 +49,9 @@
       <updated>1648709840673</updated>
       <workItem from="1648709844478" duration="34000" />
       <workItem from="1649077666284" duration="17000" />
+      <workItem from="1649177789219" duration="1000" />
+      <workItem from="1649178024491" duration="44000" />
+      <workItem from="1649178228474" duration="687000" />
     </task>
     <servers />
   </component>
