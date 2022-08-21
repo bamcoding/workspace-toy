@@ -1,4 +1,5 @@
-[2022-08-21_결과화면](https://github.com/bamcoding/workspace-toy/blob/master/react/blog/20220821_result.png)
+#2022-08-21_결과화면
+![2022-08-21_결과화면](https://github.com/bamcoding/workspace-toy/blob/master/react/blog/20220821_result.png)
 
 # Getting Started with Create React App
 
