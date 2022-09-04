@@ -10,6 +10,15 @@
   margin-left: 20px;
 }
 
+.container-list {
+  margin-top: 20px;
+}
+
+.board {
+  border:2px solid gray;
+  margin-top: 2px;
+}
+
 .category-btn {
   background-image: url('./img/header_img.png');
   height: 115px;

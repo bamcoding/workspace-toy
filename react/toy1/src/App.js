@@ -12,17 +12,17 @@ import { collection, getDocs, query, where, orderBy, QuerySnapshot } from "fireb
 function App() {
   const boardCollectionRef = collection(database, "board");
   const q = query(boardCollectionRef);
-  let boardList;
 
   getDocs(q).then((qs)=>{
     qs.forEach((doc)=>{
-      boardList = doc.data(); 
+      console.log(doc.data());
     })
   })
 
-  console.log(boardList);
+  let boardTempList = [1,2,3,4];
+
   
-  let[shoes] = useState(shoesData);
+  //let[boards] = useState(boardList);
 
   return (
     <div className="App">
@@ -51,11 +51,12 @@ function App() {
         </div>
       </Navbar>
       <div className="banner-main"></div>
-      {
-         boardList.map((item)=>(<div>{item.no}</div>))
-         //boardList.map((item)=>(<Board shoeData={item.data()}/>))
-      }
-      
+
+      <div className="container-list">
+        {
+          boardTempList.map((t)=><Board shoeData={t}/>)
+        }
+      </div>
     </div>
   );
 }

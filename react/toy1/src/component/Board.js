@@ -6,10 +6,10 @@ function board(props){
   console.log(props)
 
   return (
-    <div>
-      <div>{props.no}</div>
-      <div>{props.title}</div>
-      <div>{props.content}</div>
+    <div className="board">
+      <div>{props.shoeData}</div>
+      <div>{props.shoeData}</div>
+      <div>{props.shoeData}</div>
     </div>
   );
 }
