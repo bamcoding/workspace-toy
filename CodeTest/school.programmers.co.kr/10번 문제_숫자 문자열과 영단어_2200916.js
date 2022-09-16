@@ -8,13 +8,13 @@ function solution(s) {
         if(numSplit.length == 1 && /[0-9]/.test(numSplit)){
             answer+=numSplit;
             s=s.slice(j,s.length)
-            [i,j]=[0,0];
+            i=j=0;
         } 
         
         if(numStr.indexOf(numSplit) > -1){
             answer+= numStr.indexOf(numSplit);
             s=s.slice(j,s.length)
-            [i,j]=[0,0];
+            i=j=0;
         }
     }
     
